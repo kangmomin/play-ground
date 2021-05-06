@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select-mode</title>
+</head>
+<body>
+    <style>
+        .form{
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    </style>
+    <form action="/selectMode_process" method="POST" id="form">
+        <input type="submit" name="mode" value="light mode">
+        <input type="submit" name="mode" value="default mode">
+    </form>
+</body>
+</html>
