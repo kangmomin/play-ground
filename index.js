@@ -14,6 +14,18 @@ const selectMode_process = require('./router/selectMode_process')
 const deleteCookies = require('./router/deleteCookies')
 const getData_process = require('./router/getData_process')
 const getDB = require('./router/getDB')
+const addStore = require('./router/addStore')
+const addImg_process = require('./router/addImg_process')
+const addStore_process = require('./router/addStore_process')
+const login_process = require('./router/login_process')
+const sign_up_process = require('./router/sign_up_process')
+const logout = require('./router/logout')
+const checkKey_process = require('./router/checkKey_process')
+const getResetKey = require('./router/getResetKey')
+const loadList_process = require('./router/loadList_process')
+const { load } = require('cheerio')
+
+const oneDayTime = 1000 * 60 * 60 * 24 * 30
 
 app.use(express.json())
 app.use(cp())
@@ -26,15 +38,30 @@ app.use(session({
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: true,
-    store:new FileStore()
+    store: new FileStore(),
+    cookie: {
+        maxAge: oneDayTime
+    }
 }))
 app.use(favicon(path.join(__dirname, 'public/favicon', 'favicon.ico')))
-app.use('*', getDB)
+app.use(getDB)
 
 app.get('/', main)
 app.get('/deleteCookies', deleteCookies)
 app.get('/getData_process/:selected/:mode', getData_process)
+app.get('/addStore', addStore)
+app.get('/login', (req, res) => {res.render('login')})
+app.get('/sign_up', (req, res) => {res.render('sign_up')})
+app.get('/about', (req, res) => {res.render('blog/about.ejs')})
+app.get('/logout', logout)
+app.get('/checkKey/:key', checkKey_process)
+app.get('/getResetKey/:id', getResetKey)
+app.get('/loadList_process', loadList_process)
 
+app.post('/login_process', login_process)
+app.post('/sign_up_process', sign_up_process)
+app.post('/addStore_process', addStore_process)
+app.post('/addImg_process', addImg_process)
 app.post('/selectMode_process', selectMode_process)
 
 app.listen(port, () => { console.log(`project play-ground is running on port ${port}`) })

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>add store</title>
+</head>
+<body>
+    <script>
+        function sendImg(type = 'img') {
+            let data
+            if(type === 'logo') {
+                if(document.querySelector('#logo').files[0] === undefined) return alert('logo is something wrong')
+                data = document.querySelector('#logo').files[0]    
+                document.getElementById('logoSelector').innerHTML = '<img src="../img/loading.gif" style="width: 60px; height: 60px">'
+            } else {
+                if(document.querySelector('#img').files[0] === undefined) return alert('image is something wrong')
+                data = document.querySelector('#img').files[0]
+                document.getElementById('img_selector').innerHTML = '<img src="../img/loading.gif" style="width: 60px; height: 60px">'
+            }
+            let form = new FormData()
+            form.append('img', data)
+            $.ajax({
+                url:'/addImg_process',
+                type:'POST',
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                cache: false,
+                data:form,
+                success: (result) => {
+                    result = result.result
+                    if(type === 'logo') {
+                        document.getElementById('logoSelector').innerHTML = `
+                        가게 로고 : <input type="file" accept="image/*" id="logo">
+                        <br />
+                        <button onclick="sendImg('logo')">로고 등록</button>
+                        `
+                        if(result == 'null') {
+                            return alert("image is empty or that's not image")
+                        }
+                        return document.getElementById('showLogo').innerHTML = `<img src="../img/${result}" width="400px" height="400px" id="logoSrc">`
+                    }
+                    document.getElementById('img_selector').innerHTML = `
+                    <input type="file" accept="image/*" name="img" id="img">
+                    <input type="submit" value="send" id="send" onclick="sendImg()">
+                    `
+                    if(result == 'null') {
+                        return alert("image is empty or that's not image")
+                    }
+                    document.getElementById('des').innerHTML += `<img src="../img/${result}">`
+                }
+            })
+        }
+        
+        function add_process() {
+            let logo = document.querySelector('#logoSrc').src || null,
+                maxPersonnel = document.querySelector('#maxPersonnel').value || null,
+                name = document.querySelector('#name').value || null,
+                lat = document.querySelector('#lat').value || null,
+                lon = document.querySelector('#lon').value || null,
+                des = document.querySelector('#des').innerHTML || null
+
+            if((logo, maxPersonnel, name, lat, lon, des) === null) return alert('모든 칸을 입력 해 주셔야 합니다.')
+            document.querySelector('#loadingDiv').style.display = "block"
+            $.ajax({
+                url: '/addStore_process',
+                type: 'POST',
+                data: {
+                    logo : logo,
+                    maxPersonnel : maxPersonnel,
+                    name : name,
+                    lat : lat,
+                    lon : lon,
+                    des : des
+                },
+                success: (result) => {
+                    document.querySelector('#loadingDiv').style.display = "none"
+                    console.log(result)
+                    if(result === 'null') return alert('모든 칸을 기입해 주십시오.')
+                    document.querySelector('#loadingDiv').style.display = "block"
+                    document.querySelector('#loadingStr').innerText = '등록완료\n승인 대기'
+                    setTimeout(() => {
+                        location.href = '/'    
+                    }, 6000)
+                }
+            })
+        }
+    </script>
+    <style>
+        body{
+            margin: 0%;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <div style="background-color: rgba(0, 0, 0, 0.5); width: 100%; height: 100%; position: fixed; display: none;" id="loadingDiv">
+        <img src="../img/loading.gif" width="400px" height="400px" style="
+            left: 50%;
+            top: 50%;
+            position: absolute;
+            transform: translate(-50%, -50%);
+        ">
+        <h1 style="
+            color: aliceblue;
+            left: 50%;
+            top: 75%;
+            font:bold;
+            position: absolute;
+            transform: translate(-50%, -50%);
+        " id="loadingStr">등록 중...</h1>
+    </div>
+    <div style="margin: 8px;">
+    <div id="logoSelector">
+        가게 로고 : <input type="file" accept="image/*" id="logo">
+        <br />
+        <button onclick="sendImg('logo')">로고 등록</button>
+    </div>
+    
+    <div style="border: 1px solid black; width: 400px; height: 400px;" id="showLogo">
+        <img src="../img/plzSelectImg.jpg" id="logoSrc" width="400px" height="400px">
+    </div>
+    <br />
+    최대 수용 팀 : <input type="number" id="maxPersonnel">
+    <br />
+    이름 : <input type="text" placeholder="가게 명" id="name">
+    <br />
+    위도 : <input type="text" placeholder="위도" id="lat">
+    <br />
+    경도 : <input type="text" placeholder="경도" id="lon">
+    <div contenteditable="true" id="des" style="border: 1px solid black; height: 400px; overflow-y: auto;"></div>
+    <div id="img_selector">
+        <input type="file" accept="image/*" name="img" id="img">
+        <input type="button" onclick="sendImg()" value="이미지 넣기">
+    </div>
+    <br />
+    <input type="button" onclick="add_process()" value="상점 등록 하기">
+</div>
+</body>
+</html>

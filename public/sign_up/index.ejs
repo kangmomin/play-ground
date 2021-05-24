@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sign up</title>
+</head>
+<body>
+    <form action="/sign_up_process" method="POST">
+        <input type="text" name="nickName" placeholder="nick name"> <br />
+        <input type="text" name="pwd" placeholder="password"> <br />
+        <input type="email" name="email" placeholder="email"> <br />
+        <input type="number" name="phoneNumber" placeholder="phoneNumber"> <br />
+        <input type="text" name="hometown"placeholder='집'> <br />
+        남자<input type="radio" name="sex" id="sex" value="남자">
+        여자<input type="radio" name="sex" id="sex" value="여자"> <br />
+        10대<input type="radio" name="age" id="age" value="1">
+        20대<input type="radio" name="age" id="age" value="2">
+        30대<input type="radio" name="age" id="age" value="3">
+        40대 이상<input type="radio" name="age" id="age" value="4"> <br />
+        <input type="submit" value="계정 생성">
+    </form>
+</body>
+</html>

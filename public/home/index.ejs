@@ -12,17 +12,6 @@
     <script>
 
         async function myMap(lat = 35.16094298394488, lon = 129.0489759560262, zoom = 8) {
-            // await $.ajax({
-            //     url: "/getData_process/none/light",
-            //     type: "GET",
-            //     success: (data) => {
-            //         console.log(data)
-            //     }
-            // })
-            // let mapProp= {
-            //     center:new google.maps.LatLng(lat, lon),
-            //     zoom:zoom,
-            // }
             let container = document.getElementById('map')
 
             let options = {
@@ -31,7 +20,14 @@
             }
 
             let map = new kakao.maps.Map(container, options)
+            var mapTypeControl = new kakao.maps.MapTypeControl();
+
+            map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+            var zoomControl = new kakao.maps.ZoomControl();
+            map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
         }
+            // 카테고리를 클릭했을 때 type에 따라 카테고리의 스타일과 지도에 표시되는 마커를 변경합니다
         function clickBtn() {
             alert('https에서만 작동하지만 https는 SSL을 따로 구매를 해야 합니다..ㅠ')
             // navigator.geolocation.getCurrentPosition((position) => {
@@ -44,9 +40,34 @@
 
         myMap()
     </script>
+    <style>
+        .store{
+            border: 1px solid black;
+            display: flex;
+            height: 130px;
+        }
+    </style>
+
     <button onclick="myMap()">Reload</button>
     <br />
     <button onclick="clickBtn()">내 위치로</button>
     <button onclick="location.href = '/deleteCookies'">웹 모드 변경</button>
+    <% if(login) { %>
+        <button onclick="location.href='/addStore'">매장 등록 하기</button>
+        <button onclick="location.href='/logout'">로그아웃</button>
+    <% } else { %>
+        <button onclick="location.href='/login'">로그인</button>
+    <% } %>
+
+    <% for (row of store) { %>
+        <% if (row.isOpen) {%>
+            <div class="store">
+                <h3><%= row.name %></h3>
+                <img src="<%= row.logo %>" width="100px" height="100px">
+                <h6><%= row.nowPersonnel %>/<%= row.maxPersonnel %></h6>
+            </div>
+        <% } %>
+    <% } %>
+
 </body>
 </html>

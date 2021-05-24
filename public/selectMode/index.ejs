@@ -8,15 +8,18 @@
 </head>
 <body>
     <style>
-        .form{
+        #form{
             position: absolute;
             top: 50%;
-            transform: translateY(-50%);
+            left: 50%;
+            transform: translate(-50%, 50%);
         }
     </style>
-    <form action="/selectMode_process" method="POST" id="form">
-        <input type="submit" name="mode" value="light mode">
-        <input type="submit" name="mode" value="default mode">
+    <form action="/selectMode_process" method="POST">
+        <span id="form">
+            <input type="submit" name="mode" value="light mode">
+            <input type="submit" name="mode" value="default mode">
+        </span>
     </form>
 </body>
 </html>
