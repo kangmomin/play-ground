@@ -23,7 +23,8 @@ const logout = require('./router/logout')
 const checkKey_process = require('./router/checkKey_process')
 const getResetKey = require('./router/getResetKey')
 const loadList_process = require('./router/loadList_process')
-const { load } = require('cheerio')
+const storeAccept = require('./router/storeAccept')
+const storeAccept_process = require('./router/storeAccept_process')
 
 const oneDayTime = 1000 * 60 * 60 * 24 * 30
 
@@ -57,11 +58,13 @@ app.get('/logout', logout)
 app.get('/checkKey/:key', checkKey_process)
 app.get('/getResetKey/:id', getResetKey)
 app.get('/loadList_process', loadList_process)
+app.get('/storeAccept', storeAccept)
 
 app.post('/login_process', login_process)
 app.post('/sign_up_process', sign_up_process)
 app.post('/addStore_process', addStore_process)
 app.post('/addImg_process', addImg_process)
 app.post('/selectMode_process', selectMode_process)
+app.post('/storeAccept_process', storeAccept_process)
 
 app.listen(port, () => { console.log(`project play-ground is running on port ${port}`) })

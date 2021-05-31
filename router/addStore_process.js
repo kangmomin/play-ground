@@ -3,12 +3,12 @@ const mysqli = require('mysql').createConnection({ host: "127.0.0.1", user: "roo
 
 app.post('/addStore_process', (req, res) => {
     let post = req.body
-    let des = space(escaping(post.des)),
-        name = space(escaping(post.name)),
-        maxPersonnel = space(escaping(post.maxPersonnel)),
-        lat = space(escaping(post.lat)),
-        lon = space(escaping(post.lon)),
-        logo = space(escaping(post.logo))
+    let des = secure(post.des),
+        name = secure(post.name),
+        maxPersonnel = secure(post.maxPersonnel),
+        lat = secure(post.lat),
+        lon = secure(post.lon),
+        logo = secure(post.logo)
     if((des === null) || (name === null) || (maxPersonnel === null) || (lat === null) || (lon === null) || (logo === null)) {
         return res.send('null')
     }
@@ -18,6 +18,12 @@ app.post('/addStore_process', (req, res) => {
         res.send(row)
     })
 })
+
+function secure(key) {
+    let escaped = escaping(key)
+    let result = space(escaped)
+    return result
+}
 
 function escaping(key) {
     key.replace("<script", "<'script'")

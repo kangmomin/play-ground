@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>store-accept-page</title>
+</head>
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <style>
+        .store{
+            border: 1px solid black;
+            display: flex;
+            height: 130px;
+        }
+        .loadingImg{
+            display: none;
+        }
+    </style>
+    <script>
+        function accept_process(storeId) {
+            let userId = document.querySelector("#userId").value,
+                storeDiv = document.querySelector(`#store${storeId}`)
+                acceptBtn = document.querySelectorAll('.acceptBtn')
+                loadingImgs = document.querySelectorAll('.loadingImg')
+
+            for (btn of acceptBtn) {
+                btn.style.display = 'none'
+            }
+            for (loadingImg of loadingImgs) {
+                loadingImg.style.display = 'block'
+            }
+            $.ajax({
+                url: '/storeAccept_process',
+                type: 'POST',
+                data: {
+                    userId: userId,
+                    storeId: storeId
+                },
+                success: (result) => {
+                    if(result === 'update err') return alert('update중 error가 발생하였습니다. 나중에 다시 시도해주십시오.')
+                    if(!result) return location.href = '/'
+                    for (btn of acceptBtn) {
+                        btn.style.display = 'block'
+                    }
+                    for (loadingImg of loadingImgs) {
+                        loadingImg.style.display = 'none'
+                    }
+                    storeDiv.innerHTML = "updated"
+                }
+            })
+        }
+    </script>
+    <% let i = 0 %>
+    <% for (store of stores) { %>
+        <% if(i > 30) break %>
+        <% if (store.isOpen) {%>
+            <div class="store" id="store<%= store.id %>">
+                <h3><%= store.name %></h3>
+                <img src="<%= store.logo %>" width="100px" height="100px">
+                <h6><%= store.nowPersonnel %>/<%= store.maxPersonnel %></h6>
+                <div class="accept">
+                    <img src="./img/loading.gif" width="40" height="40" class='loadingImg'>
+                    <button class="acceptBtn" onclick="accept_process('<%= store.id %>')">accept</button>
+                </div>
+            </div>
+        <% } %>
+        <% i++ %>
+    <% } %>
+    <% if(i === 0) { %>
+        <div>
+            대기 명단이 존재하지 않습니다.
+        </div>
+    <% } %>
+    <input type="hidden" value='<%= userId %>' id="userId">
+</body>
+</html>
